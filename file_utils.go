@@ -29,7 +29,7 @@ import (
   I've left some commented out code incase I ever decide to use encoding/csv instead.
 */
 
-func WalkTsvGzCells(filename string, callback func(row int, col int, cell string) error) (err error) {
+func ReadTsvGz(filename string, callback func(*bufio.Reader) error) (err error) {
   file, err := os.Open(filename)
   if err != nil { return err }
 
@@ -42,28 +42,86 @@ func WalkTsvGzCells(filename string, callback func(row int, col int, cell string
 
   reader := bufio.NewReader(gzReader)
 
-  row := 0
-  for {
-    line, err := reader.ReadString('\n')
-    if err == io.EOF {
-      break
-    } else if err != nil {
-      return err
-    }
+  err = callback(reader)
+  return err
+}
 
-    fields := strings.Split(strings.TrimSpace(line), "\t")
-    for col, cell := range fields {
-      err = callback(row, col, cell)
+func SearchTsvGzRows(filename string, queries []string, defualt int) (map[string]int,error) {
+  // setup
+  results := make(map[string]int, len(queries))
+  for _, q := range queries {
+    results[strings.ToLower(q)] = defualt
+  }
+
+  notfound := make([]string, len(results))
+  for k := range results {
+    notfound = append(notfound, k)
+  }
+
+  // walk
+  err := ReadTsvGz(filename, func(r *bufio.Reader) error {
+    row := 0
+    for {
+      if len(notfound) <= 0 { break }
+
+      line, err := r.ReadString('\n')
+
       if err == io.EOF {
         break
       } else if err != nil {
         return err
       }
+
+      fields := strings.Split(strings.TrimSpace(line), "\t")
+
+      for _, cell := range fields {
+        for i, query := range notfound {
+          if cell == query {
+            results[query] = row
+            notfound = append(notfound[:i], notfound[i+1:]...)
+          }
+        }
+      }
+      row++
     }
-    row++
+    return nil
+  })
+
+
+  output := make(map[string]int, len(queries))
+  for _, q := range queries {
+    output[q] = results[strings.ToLower(q)]
   }
 
-  return nil
+  return output, err
+}
+
+
+func WalkTsvGzCells(filename string, callback func(row int, col int, cell string) error) (err error) {
+  err = ReadTsvGz(filename, func(r *bufio.Reader) error {
+    row := 0
+    for {
+      line, err := r.ReadString('\n')
+      if err == io.EOF {
+        break
+      } else if err != nil {
+        return err
+      }
+
+      fields := strings.Split(strings.TrimSpace(line), "\t")
+      for col, cell := range fields {
+        err = callback(row, col, cell)
+        if err == io.EOF {
+          break
+        } else if err != nil {
+          return err
+        }
+      }
+      row++
+    }
+    return nil
+  })
+  return err
 }
 
 

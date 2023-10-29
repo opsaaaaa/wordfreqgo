@@ -2,7 +2,7 @@ package main
 
 import "math"
 
-func HalfHarmonicMean(args []int) int {
+func HalfHarmonicMeanArr(args []int) int {
   if len(args) == 1 {
     return args[0]
   }
@@ -16,6 +16,14 @@ func HalfHarmonicMean(args []int) int {
   }
   return int( math.Round( float64(len(args) + 1) / sumReciprocals))
 }
+
+func HalfHarmonicMean(a, b float64) float64 {
+    if a == 0 || b == 0 {
+        return 0
+    }
+    return 2/(1/a + 1/b)
+}
+
 
 
 

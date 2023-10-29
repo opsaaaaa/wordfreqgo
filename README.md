@@ -15,5 +15,9 @@
 - [] investigate pulishing options.
 - [] consider spliting the large/small files. it tries the small file first, and does the other half if it doesnt find the word.
     - that optimization currenlt doesnt matter tho.
-- [] check what part of the loop im running toLower case on. make sure its not repeated unneesisarilly.
+- [x] check what part of the loop im running toLower case on. make sure its not repeated unneesisarilly.
+- [x] make it go faster
+- [x] fix the bug with duplicate queries
+- [] preverve order of query
+- [] calculate frequency for a given input.
 
