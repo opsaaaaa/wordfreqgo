@@ -18,7 +18,7 @@ func assetErrNil(t *testing.T, err error) {
 func Test_HalfHarmonicMeanArr(t *testing.T) {
   asertSame(t, HalfHarmonicMeanArr([]int{2, 4, 8, 16}), 5)
   asertSame(t, HalfHarmonicMeanArr([]int{5}), 5)
-  // asertSame(t, HalfHarmonicMeanArr([]int{127, 400}), int(HalfHarmonicMean(-127, -400)))
+  asertSame(t, HalfHarmonicMeanArr([]int{127, 400}), int(HalfHarmonicMean(-127, -400)))
 }
 
 
@@ -28,9 +28,10 @@ func Test_HalfHarmonicMeanArr(t *testing.T) {
   a+b/2 wrong
 
   a+b 2
+
+
 */
 
 func Test_SomeMath(t *testing.T) {
   asertSame(t, 1, 1)
-
 }
