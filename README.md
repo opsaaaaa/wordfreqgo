@@ -13,5 +13,7 @@
 - [] consider server operations with a database. and how that should work.
 - [] make an actuall readme with some explination
 - [] investigate pulishing options.
-
+- [] consider spliting the large/small files. it tries the small file first, and does the other half if it doesnt find the word.
+    - that optimization currenlt doesnt matter tho.
+- [] check what part of the loop im running toLower case on. make sure its not repeated unneesisarilly.
 
