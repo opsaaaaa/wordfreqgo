@@ -19,5 +19,5 @@
 - [x] make it go faster
 - [x] fix the bug with duplicate queries
 - [] preverve order of query
-- [] calculate frequency for a given input.
+- [] calculate frequency for a given input text and tokenizer
 

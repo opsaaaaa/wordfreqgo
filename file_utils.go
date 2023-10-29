@@ -97,32 +97,34 @@ func SearchTsvGzRows(filename string, queries []string, defualt int) (map[string
 }
 
 
-func WalkTsvGzCells(filename string, callback func(row int, col int, cell string) error) (err error) {
-  err = ReadTsvGz(filename, func(r *bufio.Reader) error {
-    row := 0
-    for {
-      line, err := r.ReadString('\n')
-      if err == io.EOF {
-        break
-      } else if err != nil {
-        return err
-      }
+// I am removing this for now, because I think it will be better to use ReadTsvGz and implment more speciallized functions.
 
-      fields := strings.Split(strings.TrimSpace(line), "\t")
-      for col, cell := range fields {
-        err = callback(row, col, cell)
-        if err == io.EOF {
-          break
-        } else if err != nil {
-          return err
-        }
-      }
-      row++
-    }
-    return nil
-  })
-  return err
-}
+// func WalkTsvGzCells(filename string, callback func(row int, col int, cell string) error) (err error) {
+//   err = ReadTsvGz(filename, func(r *bufio.Reader) error {
+//     row := 0
+//     for {
+//       line, err := r.ReadString('\n')
+//       if err == io.EOF {
+//         break
+//       } else if err != nil {
+//         return err
+//       }
+
+//       fields := strings.Split(strings.TrimSpace(line), "\t")
+//       for col, cell := range fields {
+//         err = callback(row, col, cell)
+//         if err == io.EOF {
+//           break
+//         } else if err != nil {
+//           return err
+//         }
+//       }
+//       row++
+//     }
+//     return nil
+//   })
+//   return err
+// }
 
 
 // func WalkTsvGzCells(filename string, callback func(row int, col int, cell string) error) (err error) {
