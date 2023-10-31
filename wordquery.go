@@ -1,20 +1,13 @@
 package main
 
 import (
-  "fmt"
-  "strings"
+	"fmt"
+	"strings"
 )
 
 // data/small_en.tsv.gz
 const DATA_FILE_TSV_GZ = "data/%s_%s.tsv.gz"
 
-const (
-  UNIT_FQ = iota
-  UNIT_FPMW = iota
-  UNIT_FPBW = iota
-  UNIT_ZIPF = iota
-  UNIT_CB = iota
-)
 
 type WordQuery struct {
   // en, ja, es, fr
@@ -42,7 +35,7 @@ type WordQuery struct {
   comboBias float64
 
   // the unit
-  unit int8
+  unitConversion func(n float64) float64
 }
 
 func NewWordQuery(lang string) *WordQuery {
@@ -52,26 +45,28 @@ func NewWordQuery(lang string) *WordQuery {
     max:      800,
     tokenize: strings.Fields,
     comboBias: 0.5,
-    unit: UNIT_ZIPF,
+    unitConversion: CbToZipf,
   }
 }
 
-func (w *WordQuery) Lookup(query string) (int, error) {
+func (w *WordQuery) Lookup(query string) (float64, error) {
   words := w.tokenize(query)
 
   results, err := SearchTsvGzRows(fmt.Sprintf(DATA_FILE_TSV_GZ, w.size, w.lang), words, w.max)
 
   fqs := make([]int, len(words))
+  minfq := 0
 
   for i, word := range words {
     fqs[i] = results[word]
+    if fqs[i] > minfq { minfq = fqs[i] }
   }
 
-  return HalfHarmonicMeanArr(fqs), err
+  return w.calcQueryValue(minfq, fqs...), err
 }
 
 
-func (w *WordQuery) LookupMultiple(queries ...string) (map[string]int, error) {
+func (w *WordQuery) LookupMultiple(queries ...string) (map[string]float64, error) {
 
   words := make([]string, 0)
   for _,query := range queries {
@@ -79,9 +74,9 @@ func (w *WordQuery) LookupMultiple(queries ...string) (map[string]int, error) {
   }
 
   results, err := SearchTsvGzRows(fmt.Sprintf(DATA_FILE_TSV_GZ, w.size, w.lang), words, w.max)
-  if err != nil { return results, err }
+  if err != nil { return nil, err }
 
-  output := make(map[string]int, len(queries))
+  output := make(map[string]float64, len(queries))
   for _,query := range queries {
     q := w.tokenize(query)
     fqs := make([]int, len(q))
@@ -92,10 +87,14 @@ func (w *WordQuery) LookupMultiple(queries ...string) (map[string]int, error) {
       if fqs[i] > minfq { minfq = fqs[i] }
     }
 
-    output[query] = int(float64(minfq) + ((CbAndProbabilities(fqs...) - float64(minfq))*w.comboBias))
+    output[query] = w.calcQueryValue(minfq, fqs...)
   }
 
   return output, nil
+}
+
+func (w *WordQuery) calcQueryValue(minfq int, fqs ...int) float64 {
+  return w.unitConversion(float64(minfq) + ((CbAndProbabilities(fqs...) - float64(minfq))*w.comboBias))
 }
 
 
