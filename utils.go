@@ -2,6 +2,27 @@ package main
 
 import "math"
 
+func CbToFq(cb int) float64 {
+  return math.Pow(10.00, -float64(cb)/100.00)
+}
+
+func CbToFpmw(cb int) float64 {
+  return math.Pow(10.00, -float64(cb)/100.00) * 1000000
+}
+
+func CbToFpbw(cb int) float64 {
+  return math.Pow(10.00, -float64(cb)/100.00) * 1000000000
+}
+
+func CbToZipf(cb int) float64 {
+  return (-float64(cb) + 900.00) / 100.00
+}
+
+
+
+// HalfHarmonicMean is an average funciton.
+// but it is kindof incorrect in this case.
+
 func HalfHarmonicMeanArr(args []int) int {
   if len(args) == 1 {
     return args[0]
