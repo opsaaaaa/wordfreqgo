@@ -16,6 +16,7 @@ func CbToZipf(cb float64) float64 {
 }
 
 
+
 func FqToFpmw(fq float64) float64 {
 	return fq * 1000000
 }
@@ -29,6 +30,16 @@ func FqToCb(fq float64) float64 {
 	return math.Abs(math.Log10(fq) * 100.0)
 }
 
+
+// Combind the probability of both A and B and C occuring,
+// in the CB format.
+func CbAndProbabilities(args ...int) float64 {
+  sum := 1.0
+  for _, arg := range args {
+    sum = sum * CbToFq(float64(arg))
+  }
+  return FqToCb(sum)
+}
 
 /*
   HalfHarmonicMean is an average funciton.
