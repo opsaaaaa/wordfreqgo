@@ -31,8 +31,10 @@ func FqToCb(fq float64) float64 {
 }
 
 
-// Combind the probability of both A and B and C occuring,
-// in the CB format.
+/*
+  Combind the probability of both A and B and C occuring, in the CB format.
+  P(A and B) ≈ P(A) * P(B) // assuming that A and B are independent
+*/
 func CbAndProbabilities(args ...int) float64 {
   sum := 1.0
   for _, arg := range args {
@@ -67,7 +69,6 @@ func CbAndProbabilities(args ...int) float64 {
 
   we're looking for P(A and B).
 
-  P(A and B) ≈ P(A) * P(B) // assuming that A and B are independent
 
   that should work if p(A/B) are both proportions between 1 and 0
   But I suspect that we'd need to convert them away from cb first.
