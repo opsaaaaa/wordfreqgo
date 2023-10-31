@@ -54,9 +54,11 @@ func (w *WordQuery) LookupMultiple(queries []string) (map[string]int, error) {
   for _,query := range queries {
     q := w.tokenize(query)
     fqs := make([]int, len(q))
+    minfq := 0
 
     for i, word := range q {
       fqs[i] = results[word]
+      if fqs[i] > minfq { minfq = fqs[i] }
     }
 
     output[query] = HalfHarmonicMeanArr(fqs)
