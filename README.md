@@ -28,4 +28,4 @@
 - [] handle numbers.
 
 - [] filter out things like the dot in mr. dr.
-- [] do correct math.
+- [x] do correct math.

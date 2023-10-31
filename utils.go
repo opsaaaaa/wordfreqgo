@@ -18,16 +18,16 @@ func CbToZipf(cb float64) float64 {
 
 
 func FqToFpmw(fq float64) float64 {
-	return fq * 1000000
+  return fq * 1000000
 }
 func FqToFpbw(fq float64) float64 {
-	return fq * 1000000000
+  return fq * 1000000000
 }
 func FqToZipf(fq float64) float64 {
-	return math.Log10(fq) + 9
+  return math.Log10(fq) + 9
 }
 func FqToCb(fq float64) float64 {
-	return math.Abs(math.Log10(fq) * 100.0)
+  return math.Abs(math.Log10(fq) * 100.0)
 }
 
 

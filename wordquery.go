@@ -29,8 +29,8 @@ type WordQuery struct {
 
   // describes the bias between the minimum and maximum possible values
   // when estimating multi-word phrases, like "new york".
-  // 1 assumes the words are unrelated and 0 assumes the word combo only occurs together
-  // 1.0~0.0, 0.5
+  // 1.0 assumes the words are unrelated and 0.0 assumes the word combo only occurs together
+  // 0.5 is the default
   comboBias float64
 }
 
@@ -59,7 +59,7 @@ func (w *WordQuery) Lookup(query string) (int, error) {
 }
 
 
-func (w *WordQuery) LookupMultiple(queries []string) (map[string]int, error) {
+func (w *WordQuery) LookupMultiple(queries ...string) (map[string]int, error) {
 
   words := make([]string, 0)
   for _,query := range queries {
