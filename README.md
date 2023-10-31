@@ -8,6 +8,7 @@
 - [] convert from cb to zipf and other formats
 - [] add other functions like top n
 - [] extract tsv files function.
+- [] extract tsv word list function.
 - [] extract work list with frequency ranges.
     - just use line numbers to get the right bits, if from zipf, round min and max with celi and floor.
 - [] make it a commandline interface.
@@ -26,3 +27,5 @@
 - [] for my usecase I will want to filter by correcly spelled words. common misspellings are included in the dataset.
 - [] handle numbers.
 
+- [] filter out things like the dot in mr. dr.
+- [] do correct math.
