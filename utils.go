@@ -2,6 +2,38 @@ package main
 
 import "math"
 
+/*
+  Cb is a word frequency from of logarithmic centibel scale.
+
+  practical range -127(the) to -799
+  actuall range is 0 to -900(or less)
+
+  Cb is the word frequency unit used the dataset from the python wordfq program.
+  https://github.com/rspeer/wordfq
+
+  > 0 cB represents a word that occurs with probability 1, so it is the only
+  > word in the data (this of course doesn't happen). -200 cB represents a
+  > word that occurs once per 100 tokens, -300 cB represents a word that
+  > occurs once per 1000 tokens, and so on.
+
+  Advantages
+  - Its very similar to zipf, but with a different scale and 0 point.
+  - Its really good for storage sizes.
+  - Its always less than 0, so rare values cant cross 0.
+  - and numbers are larger, so you dont need decimils for reasonable accuracy.
+  - you can easilly save them as positive integers.
+
+  Disadvantages
+  - its less human readable.
+
+  In the wordfq program they 'bin' the data to reduce the file size further.
+  array[ bin[ "words", ...], ... ]
+  The index of the bin represents the positive frequency value.
+  you end up with a lot of leading empty bins, but after that it gets really effecient.
+  I've decided to use .tsv and line/row numbers instead.
+  either way its quite compact.
+*/
+
 func CbToFq(cb float64) float64 {
   return math.Pow(10.00, -math.Abs(cb)/100.00)
 }
@@ -15,8 +47,13 @@ func CbToZipf(cb float64) float64 {
   return (-math.Abs(cb) + 900.00) / 100.00
 }
 
+/*
+  Fq frequency represented as a proportion between 0 and 1
+  occurances count for a word in the corpus divided by total words in corpus
 
-
+  practicle range 0.053(the) 0.00000001(trella)
+  actual range 0 to 1
+*/
 func FqToFpmw(fq float64) float64 {
   return fq * 1000000
 }
@@ -33,7 +70,8 @@ func FqToCb(fq float64) float64 {
 
 /*
   Combind the probability of both A and B and C occuring, in the CB format.
-  P(A and B) ≈ P(A) * P(B) // assuming that A and B are independent
+  P(A and B) ≈ P(A) * P(B)
+  assuming that A and B are independent
 */
 func CbAndProbabilities(args ...int) float64 {
   sum := 1.0
@@ -68,7 +106,6 @@ func CbAndProbabilities(args ...int) float64 {
   P(A and B): The probability that both events A and B occur simultaneously.
 
   we're looking for P(A and B).
-
 
   that should work if p(A/B) are both proportions between 1 and 0
   But I suspect that we'd need to convert them away from cb first.
