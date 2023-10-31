@@ -67,6 +67,33 @@ func FqToCb(fq float64) float64 {
   return math.Abs(math.Log10(fq) * 100.0)
 }
 
+/*
+  ZipF is log10 of frequency per billion words
+  Named after the American linguist George Kingsley Zipf
+
+  Practical Range 1-7ish 1.01(trella) to 7.73(the).
+  Actual Range is 9.0 to 0.0(or less technically)
+
+  Advantages
+  - Its human readable and its a known common standerd.
+
+  Disavantages
+  - It requires decimials for accuracy.
+  - Technically it can cross 0 with extremely rare items in large datasets.
+*/
+func ZipfToFq(zipf float64) float64 {
+  return math.Pow(10.00, zipf) / 1e9
+}
+func ZipfToFpmw(zipf float64) float64 {
+  return math.Pow(10.00, zipf) / 1000
+}
+func ZipfToFpbw(zipf float64) float64 {
+  return math.Pow(10.00, zipf)
+}
+func ZipfToCb(zipf float64) float64 {
+  return (zipf * 100.0) - 900.00
+}
+
 
 /*
   Combind the probability of both A and B and C occuring, in the CB format.
@@ -132,9 +159,59 @@ func HalfHarmonicMean(a, b float64) float64 {
 
 
 
+/*
+  fpmw frequency per million words.
+  or the number of times a word occurs in one million words
+  Practical range 53703(the) to 0.01(trella)
+  actual range is from 1000000 to 0
+
+  a fpmw of 1 means that word occurs 1 once on average for every million words
+  a fpmw of 1,000,000 would mean every word/token in the corpus was the same.
+
+  Advantages
+  - Its straight forward to calculated and understand.
+  - corpus size doesn't change the relative value.
+  - Its a old standard.
+
+  Disadvantages:
+  - the issue with fpmw is that rare words can have a fpmw of less than 1
+  - and its not easy for humans to compare.
+*/
+// func FpmwToFq(fpmw float64) float64 {
+//  return fpmw / 1000000.0
+// }
+// func FpmwToFpbw(fpmw float64) float64 {
+//  return fpmw * 1000
+// }
+// func FpmwToZipf(fpmw float64) float64 {
+//  return math.Log10(fpmw * 1000)
+// }
+// func FpmwToCb(fpmw float64) float64 {
+//  return math.Log10(fpmw / 1000000.0) * 100.0
+// }
+// func CalcFpmw(occurances float64, total float64) float64 {
+//  return (occurances / total) * 1000000
+// }
 
 
+/*
+  fpbw frequency per billion words.
+  the same as fpmw but with a billion instead of million.
 
-
-
-
+  The advantages over fpbw is that values are far less likely to dip below 1
+*/
+// func FpbwToFq(fpbw float64) float64 {
+//   return fpbw / 1000000000.0
+// }
+// func FpbwToFpmw(fpbw float64) float64 {
+//   return fpbw / 1000
+// }
+// func FpbwToZipf(fpbw float64) float64 {
+//   return math.Log10(fpbw)
+// }
+// func FpbwToCb(fpbw float64) float64 {
+//   return math.Log10(fpbw / 1000000000.0) * 100.0
+// }
+// func CalcFpbw(occurances float64, total float64) float64 {
+//   return (occurances / total) * 1000000000
+// }

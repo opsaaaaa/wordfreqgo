@@ -1,17 +1,25 @@
 package main
 
 import (
-	"fmt"
-	"strings"
+  "fmt"
+  "strings"
 )
 
 // data/small_en.tsv.gz
 const DATA_FILE_TSV_GZ = "data/%s_%s.tsv.gz"
 
+const (
+  UNIT_FQ = iota
+  UNIT_FPMW = iota
+  UNIT_FPBW = iota
+  UNIT_ZIPF = iota
+  UNIT_CB = iota
+)
+
 type WordQuery struct {
   // en, ja, es, fr
   lang   string
-  
+
   // the size of dataset used.
   // small has upto CB 600 and large has up to CB 800
   // large, small
@@ -20,7 +28,7 @@ type WordQuery struct {
   // the default CB value for words not found in the dataset.
   // between 600~800
   max    int
-  
+
   // tokenize queries for multi-word phrases.
   // its only important if the language doesn't use white space as word boundaries
   // and your querying a multi-word phrase.
@@ -32,6 +40,9 @@ type WordQuery struct {
   // 1.0 assumes the words are unrelated and 0.0 assumes the word combo only occurs together
   // 0.5 is the default
   comboBias float64
+
+  // the unit
+  unit int8
 }
 
 func NewWordQuery(lang string) *WordQuery {
@@ -41,6 +52,7 @@ func NewWordQuery(lang string) *WordQuery {
     max:      800,
     tokenize: strings.Fields,
     comboBias: 0.5,
+    unit: UNIT_ZIPF,
   }
 }
 
