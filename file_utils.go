@@ -29,7 +29,7 @@ import (
   I've left some commented out code incase I ever decide to use encoding/csv instead.
 */
 
-func ReadTsvGz(filename string, callback func(*bufio.Reader) error) (err error) {
+func readGzipGz(filename string, callback func(*gzip.Reader) error) (err error) {
   file, err := os.Open(filename)
   if err != nil { return err }
 
@@ -40,12 +40,76 @@ func ReadTsvGz(filename string, callback func(*bufio.Reader) error) (err error) 
 
   defer gzReader.Close()
 
-  reader := bufio.NewReader(gzReader)
-
-  err = callback(reader)
+  err = callback(gzReader)
   return err
+ 
 }
 
+func readBufioGz(filename string, callback func(*bufio.Reader) error) error {
+  return readGzipGz(filename, func(r *gzip.Reader) error {
+    return callback(bufio.NewReader(r))
+  })
+}
+
+func scanBufioGz(filename string, callback func(*bufio.Scanner) error) error {
+  return readGzipGz(filename, func(r *gzip.Reader) error {
+    return callback(bufio.NewScanner(r))
+  })
+}
+
+func splitOnTabNewlineSpace(data []byte, atEOF bool) (int,[]byte,error) {
+  start := 0
+  i := 0
+  // skip leading empty lines
+  for ; i < len(data); i++ {
+    if data[i] != '\t' && data[i] != '\n' && data[i] != ' ' {
+      start = i
+      break
+    }
+  }
+  // skip leading empty lines
+  for ; i < len(data); i++ {
+    if data[i] == '\t' || data[i] == '\n' || data[i] == ' ' {
+      return i + 1, data[start:i], nil
+    }
+  }
+  if !atEOF { return 0, nil, nil }
+  return 0, data, bufio.ErrFinalToken
+}
+
+
+func CellListRangeTsvGz(filename string, start, end int) ([]string, error) {
+  out := make([]string,0)
+
+  err := scanBufioGz(filename, func(sc *bufio.Scanner) error {
+    sc.Split(splitOnTabNewlineSpace)
+
+    c := 0
+
+    for ; c < start; c++ {
+      sc.Scan()
+    }
+    for sc.Scan() {
+      if sc.Err() != nil { return sc.Err() }
+      out = append(out, sc.Text())
+      c++
+      if c >= end {break}
+    }
+    return sc.Err()
+  })
+
+  return out, err
+}
+
+// gat all the words between two line numbers
+// func ListRangeRowsTsvGz(filename string, start, end int) ([]string, errorr) {
+//   err := readBufioGz(filename, func(r *bufio.Reader) error {
+//     row := 0
+
+//   })
+// }
+
+// find the linenumber/row for a list of words.
 func SearchTsvGzRows(filename string, queries []string, defualt int) (map[string]int,error) {
   // setup
   results := make(map[string]int, len(queries))
@@ -59,7 +123,7 @@ func SearchTsvGzRows(filename string, queries []string, defualt int) (map[string
   }
 
   // walk
-  err := ReadTsvGz(filename, func(r *bufio.Reader) error {
+  err := readBufioGz(filename, func(r *bufio.Reader) error {
     row := 0
     for {
       if len(notfound) <= 0 { break }
@@ -70,6 +134,8 @@ func SearchTsvGzRows(filename string, queries []string, defualt int) (map[string
         break
       } else if err != nil {
         return err
+      } else if line == "" {
+        continue
       }
 
       fields := strings.Split(strings.TrimSpace(line), "\t")

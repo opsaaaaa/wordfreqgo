@@ -1,7 +1,7 @@
 package main
 
 import (
-	"testing"
+  "testing"
 )
 
 func Test_SearchTsvGz(t *testing.T) {
@@ -11,6 +11,30 @@ func Test_SearchTsvGz(t *testing.T) {
   assetErrNil(t, err)
   for k,v := range expected {
     asertSame(t, results[k], v)
+  }
+}
+
+func Test_CellListRangeTsvGz(t *testing.T) {
+  expected := []string{"b2","c2","a3"}
+  results, err := CellListRangeTsvGz("test/sample_test.tsv.gz", 1, 4)
+  assetErrNil(t, err)
+  if len(results) != 3 { 
+    t.Fatalf("Expected len to equal 3 and got %v:\n%v\n",len(results), results)
+  }
+  for i,v := range expected {
+    asertSame(t, v, results[i])
+  }
+}
+
+func Test_CellListRangeTsvGz_overflow(t *testing.T) {
+  expected := []string{"a2","b2","c2","a3"}
+  results, err := CellListRangeTsvGz("test/sample_test.tsv.gz", 0, 100)
+  assetErrNil(t, err)
+  if len(results) != 9 { 
+    t.Fatalf("Expected len to equal 3 and got %v:\n%v\n",len(results), results)
+  }
+  for i,v := range expected {
+    asertSame(t, v, results[i])
   }
 }
 
@@ -40,11 +64,11 @@ func Test_SearchTsvGz(t *testing.T) {
 // }
 
 
-// a2	b2	c2
+// a2 b2  c2
 // a3
 // a4
 
-// a6	b6
+// a6 b6
 
 
 // a9

@@ -7,7 +7,7 @@ import (
 
 func asertSame(t *testing.T, a, b interface{}) {
   if a != b {
-    t.Errorf("Expected %v, but got %v", b, a)
+    t.Errorf("Expected %v, but got %v", a, b)
   }
 }
 
