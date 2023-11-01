@@ -61,6 +61,9 @@ func CbToFpbw(cb float64) float64 {
 func CbToZipf(cb float64) float64 {
   return (-math.Abs(cb) + 900.00) / 100.00
 }
+func CbToCb(cb float64) float64 {
+  return math.Abs(cb)
+}
 
 /*
   ZipF is log10 of frequency per billion words

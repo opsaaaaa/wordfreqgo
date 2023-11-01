@@ -49,24 +49,24 @@ func NewWordQuery(lang string) *WordQuery {
   }
 }
 
-func (w *WordQuery) Lookup(query string) (float64, error) {
-  words := w.tokenize(query)
+// func (w *WordQuery) Lookup(query string) (float64, error) {
+//   words := w.tokenize(query)
 
-  results, err := SearchTsvGzRows(fmt.Sprintf(DATA_FILE_TSV_GZ, w.size, w.lang), words, w.max)
+//   results, err := SearchTsvGzRows(fmt.Sprintf(DATA_FILE_TSV_GZ, w.size, w.lang), words, w.max)
 
-  fqs := make([]int, len(words))
-  minfq := 0
+//   fqs := make([]int, len(words))
+//   minfq := 0
 
-  for i, word := range words {
-    fqs[i] = results[word]
-    if fqs[i] > minfq { minfq = fqs[i] }
-  }
+//   for i, word := range words {
+//     fqs[i] = results[word]
+//     if fqs[i] > minfq { minfq = fqs[i] }
+//   }
 
-  return w.calcQueryValue(minfq, fqs...), err
-}
+//   return w.calcQueryValue(minfq, fqs...), err
+// }
 
 
-func (w *WordQuery) LookupMultiple(queries ...string) (map[string]float64, error) {
+func (w *WordQuery) Lookup(queries ...string) (map[string]float64, error) {
 
   words := make([]string, 0)
   for _,query := range queries {

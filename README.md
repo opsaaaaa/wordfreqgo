@@ -26,9 +26,11 @@
 - [x] walk tsv file
 - [x] write find the word functions.
 - [x] create a git repo
-- [] convert from cb to zipf and other formats
+- [x] convert from cb to zipf and other formats
 - [] write a baller test for unit conversions.
 - [] add other functions like top n
+- [] update tests
+- [] make word query lookup one function. having the one query lookup is redundant.
 - [] extract tsv files function.
 - [] extract tsv word list function.
 - [] extract work list with frequency ranges.
