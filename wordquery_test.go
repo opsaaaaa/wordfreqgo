@@ -18,10 +18,8 @@ func Test_WordQuery_Lookup(t *testing.T) {
   wq.unitConversion = CbToCb
   results, err := wq.Lookup("the")
   assetErrNil(t, err)
-  for k, v := range results {
-    asertSame(t, k, "the")
-    asertSame(t, v, 127.0)
-  }
+  asertSame(t, results[0].word, "the")
+  asertSame(t, results[0].val, 127.0)
 }
 
 func Benchmark_WordQuery_TopN(b *testing.B) {

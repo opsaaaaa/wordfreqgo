@@ -6,11 +6,11 @@ import (
 
 func Test_SearchTsvGz(t *testing.T) {
   // line numbers start at 0
-  expected := map[string]int{"a2":1,"b2":1,"a6":5,"bad":10}
-  results, err := SearchTsvGzRows("test/sample_test.tsv.gz", []string{"a2", "b2", "a6", "bad"}, 10)
+  expected := map[string]int{"a2":1,"b2":1,"a6":5,"bad":9}
+  results, err := SearchTsvGzRows("test/sample_test.tsv.gz", []string{"a2", "b2", "a6", "bad"})
   assetErrNil(t, err)
-  for k,v := range expected {
-    asertSame(t, results[k], v)
+  for _,wci := range results {
+    asertSame(t, wci.cb, expected[wci.word])
   }
 }
 

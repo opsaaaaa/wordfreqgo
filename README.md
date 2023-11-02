@@ -34,6 +34,7 @@
 - [x] add top n function
 - [x] fix combonations. half harmonic isn't correct. the duke, is shown as more common than duke, cause the is high.
 - [x] do correct math.
+- [x] preserve order of query
 
 ## indexes
 This is a very fun tangient but this is infact a tangent.
@@ -50,10 +51,14 @@ it is good enough for what it is. I should honestly use a database for fast look
     - key, value
     - [[rune, val]]
     - jk we're noping this feature.
+    - https://tufin.medium.com/printing-ascii-trees-in-golang-8ae6692fabe0
+- [] check if a tree lookup is smaller than a bin wordlist.
 
 ## other tasks
+- [] make an actuall readme with some explination
+    - copy it from my ruby project.
+- [] make it a commandline interface.
 - [] get range by line
-- [] preverve order of query
 - [] handle numbers.
 - [] filter out things like the dot in mr. dr.
     - careful about filtering out puncuation.
@@ -65,8 +70,6 @@ it is good enough for what it is. I should honestly use a database for fast look
 - [] extract tsv word list function.
 - [] extract work list with frequency ranges.
     - just use line numbers to get the right bits, if from zipf, round min and max with celi and floor.
-- [] make it a commandline interface.
-- [] make an actuall readme with some explination
 
 ## consider decisions
 - [] consider filtering with spell checker. (maybe another project)

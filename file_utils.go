@@ -1,11 +1,11 @@
 package main
 
 import (
-  "bufio"
-  "compress/gzip"
-  "io"
-  "os"
-  "strings"
+	"bufio"
+	"compress/gzip"
+	"io"
+	"os"
+	"strings"
 )
 
 /*
@@ -123,19 +123,26 @@ type WordCbInt struct {
 // }
 
 // find the linenumber/row for a list of words.
-func SearchTsvGzRows(filename string, queries []string, defualt int) (map[string]int,error) {
+// Note that this assumes all queries are single words.
+// Joining multiword queries is done in the Lookup funciton.
+func SearchTsvGzRows(filename string, queries []string) ([]WordCbInt,error) {
   // setup
-  results := make(map[string]int, len(queries))
-  for _, q := range queries {
-    results[strings.ToLower(q)] = defualt
+  results := make([]WordCbInt, len(queries))
+  for i, q := range queries {
+    results[i].word = strings.ToLower(q)
+    // results[i].cb = defualt
   }
 
-  notfound := make([]string, len(results))
-  for k := range results {
-    notfound = append(notfound, k)
+  // notfound := make(map[string]int, len(results))
+  // for i, wci := range results {
+  //   notfound[wci.word] = i
+  // }
+  notfound := make([]int, len(results))
+  for i := range results {
+    notfound[i] = i
   }
 
-  // walk
+  // walk tsv and find matching cells and collect the row number.
   err := readBufioGz(filename, func(r *bufio.Reader) error {
     row := 0
     for {
@@ -154,25 +161,32 @@ func SearchTsvGzRows(filename string, queries []string, defualt int) (map[string
       fields := strings.Split(strings.TrimSpace(line), "\t")
 
       for _, cell := range fields {
-        for i, query := range notfound {
-          if cell == query {
-            results[query] = row
-            notfound = append(notfound[:i], notfound[i+1:]...)
+        for i, idx := range notfound {
+          if cell == results[idx].word {
+            results[idx].cb = row
+            notfound[i] = notfound[len(notfound)-1]
+            notfound = notfound[:len(notfound)-1]
           }
         }
       }
       row++
     }
+
+    // add max value to remaining results
+    for _, idx := range notfound {
+      results[idx].cb = row
+    }
     return nil
   })
 
 
-  output := make(map[string]int, len(queries))
-  for _, q := range queries {
-    output[q] = results[strings.ToLower(q)]
+  // output := make([]WordCbInt, len(queries))
+  for i, q := range queries {
+    results[i].word = q
+    // output[q] = results[strings.ToLower(q)]
   }
 
-  return output, err
+  return results, err
 }
 
 

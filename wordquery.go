@@ -65,29 +65,40 @@ func NewWordQuery(lang string) *WordQuery {
 //   return w.calcQueryValue(minfq, fqs...), err
 // }
 
+// TODO: add a thing for unit maybe
+type WordValFloat struct {
+  word string
+  val float64
+}
 
-func (w *WordQuery) Lookup(queries ...string) (map[string]float64, error) {
+func (w *WordQuery) Lookup(queries ...string) ([]WordValFloat, error) {
 
   words := make([]string, 0)
   for _,query := range queries {
     words = append(words, w.tokenize(query)...)
   }
 
-  results, err := SearchTsvGzRows(w.filenameTsvGz(), words, w.max)
+  results, err := SearchTsvGzRows(w.filenameTsvGz(), words)
   if err != nil { return nil, err }
 
-  output := make(map[string]float64, len(queries))
-  for _,query := range queries {
+  wordMap := make(map[string]int, len(results))
+  for _,wci := range results {
+    wordMap[wci.word] = wci.cb
+  }
+
+  output := make([]WordValFloat, len(queries))
+  for i,query := range queries {
     q := w.tokenize(query)
     fqs := make([]int, len(q))
     minfq := 0
 
     for i, word := range q {
-      fqs[i] = results[word]
+      fqs[i] = wordMap[word]
       if fqs[i] > minfq { minfq = fqs[i] }
     }
 
-    output[query] = w.calcQueryValue(minfq, fqs...)
+    output[i].val = w.calcQueryValue(minfq, fqs...)
+    output[i].word = query
   }
 
   return output, nil
