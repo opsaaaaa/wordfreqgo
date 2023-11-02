@@ -101,6 +101,19 @@ func CellListRangeTsvGz(filename string, start, end int) ([]string, error) {
   return out, err
 }
 
+
+// TODO write a thing that handles exporting.
+// I guess the output should be a array of word: fq pairs.
+// I want one to query by the number of words, and one to query by the frequency.
+// Tho I think in practive I'd endup using the word count version.
+// notibally if we spit on tab or newline then we can't get the line number out of it.
+// Also preserve order is important here. []map[string]int no.
+
+type WordCbInt struct {
+  word string
+  cb int
+}
+
 // gat all the words between two line numbers
 // func ListRangeRowsTsvGz(filename string, start, end int) ([]string, errorr) {
 //   err := readBufioGz(filename, func(r *bufio.Reader) error {
