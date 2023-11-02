@@ -73,7 +73,7 @@ func (w *WordQuery) Lookup(queries ...string) (map[string]float64, error) {
     words = append(words, w.tokenize(query)...)
   }
 
-  results, err := SearchTsvGzRows(fmt.Sprintf(DATA_FILE_TSV_GZ, w.size, w.lang), words, w.max)
+  results, err := SearchTsvGzRows(w.filenameTsvGz(), words, w.max)
   if err != nil { return nil, err }
 
   output := make(map[string]float64, len(queries))
@@ -93,9 +93,16 @@ func (w *WordQuery) Lookup(queries ...string) (map[string]float64, error) {
   return output, nil
 }
 
+func (w *WordQuery) filenameTsvGz() string {
+  return fmt.Sprintf(DATA_FILE_TSV_GZ, w.size, w.lang)
+}
+
 func (w *WordQuery) calcQueryValue(minfq int, fqs ...int) float64 {
   return w.unitConversion(float64(minfq) + ((CbAndProbabilities(fqs...) - float64(minfq))*w.comboBias))
 }
 
+func (w *WordQuery) TopN(n int) ([]string, error) {
+  return CellListRangeTsvGz(w.filenameTsvGz(), 0, n)
+}
 
 

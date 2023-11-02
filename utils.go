@@ -15,6 +15,19 @@ func CbAndProbabilities(args ...int) float64 {
   return FqToCb(sum)
 }
 
+// func getValNestedMap(m map[string]interface{}) interface{} {
+//     for i := range m {
+//         nestedMap, ok := m[i].(map[string]interface{})
+//         if ok {
+//             return getValNestedMap(nestedMap)
+//         }
+//         return m[i]
+//     }
+
+//     return nil
+// }
+
+
 /*
   HalfHarmonicMean is an average funciton.
   but it is kindof incorrect in this case.
