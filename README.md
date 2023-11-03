@@ -37,10 +37,12 @@
 - [x] preserve order of query
 - [x] add wordtree code to repo
 - [x] Test to make sure wordtree encodes and decodes values correctly
-- [] convert files to wordtree format.
+- [] write a script to convert files to wordtree format.
+- [] write wordquery with tree.
 - [] benchmark wordtree lookup
 - [] check if wordtree file is smaller than tsv
-- [] 
+- [] Remove "small" "large" distinction because opening files ins't a bottle neck
+- [] fix spelling error for assertSame and assertErrNil
 
 ## indexes
 This is a very fun tangient but this is infact a tangent.
