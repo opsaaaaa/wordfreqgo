@@ -1,11 +1,14 @@
 package main
 
-import "fmt"
+import (
+  "fmt"
+  "github.com/vmihailenco/msgpack/v5"
+)
 
 
 
 
-type Node [2]rune
+type Node string
 type Tree map[Node]Tree
 // the other option is to use a string
 // and then encode the ending with a length 2 string
@@ -16,53 +19,86 @@ type Tree map[Node]Tree
 // Ok I need to get going now. Enough coding.
 
 func main() {
-  // t := Tree{
-  //   Node{'a',-1}: Tree{
-  //     Node{'b',1}: nil,
-  //   },
-  //   Node{'c',-1}: nil,
-  // }
   t := make(Tree, 0)
-  t.Insert("bill", 10)
-  t.Insert("billy", 11)
-  t.Insert("bob", 20)
-  t.Insert("frank", 40)
-  // fmt.Println(t)
+  t.Insert("one", 1)
+  t.Insert("two", 2)
+  t.Insert("three", 3)
+  t.Insert("four", 4)
+  t.Insert("five", 5)
+  t.Insert("six", 6)
+  t.Insert("seven", 7)
+  t.Insert("eight", 8)
+  t.Insert("nine", 9)
+  t.Insert("ten", 10)
+  t.Insert("billy", 100)
+  t.Insert("bob", 200)
+  t.Insert("frank", 800)
+
+
+  data, err := msgpack.Marshal(t)
+  if err != nil { panic(err) }
+
+  var newtree Tree
+  err = msgpack.Unmarshal(data, &newtree)
+  if err != nil { panic(err) }
+
   t.Print()
+  newtree.Print()
+  fmt.Println(t.Lookup("bob"))
+  fmt.Println(newtree.Lookup("bob"))
+
 }
 
 // func node(letter rune, i int32) [2]rune {
 //   return [2]rune{letter, i}
 // }
-func (t *Tree) Lookup(word string) {
+func (t *Tree) Lookup(word string) int32 {
+  return t.lookup([]rune(word))
+}
+func (t *Tree) lookup(word []rune) int32 {
   m := *t
   i := 0
   for ; i < len(word) - 1;i++ {
-    m = m[Node{r,-1}]
+    if newMap, ok := m[Node(word[i])]; ok {
+      m = newMap
+    } else {
+      return -1
+    }
   }
-  for i,r := range word {
-    
+
+  for n := range m {
+    chars := []rune(n)
+    if len(chars) == 2 && chars[0] == word[i] {
+      return int32(chars[1])
+    }
   }
+  // fmt.Println("bar yo")
+  return -1
 }
 
 // storing words backwards might be more efficient
 // The lookup function 
-func (t *Tree) LookupR(word string)  {
-}
+// func (t *Tree) LookupR(word string)  {
+// }
 
 func (t *Tree) Insert(word string, val int32) {
+  t.insert([]rune(word), val)
+}
+
+func (t *Tree) insert(word []rune, val int32) {
   m := *t
   var n Node
   i := 0
+
   for ; i < len(word) - 1;i++ {
-    n = Node{rune(word[i]), -1}
+    n = Node(word[i])
 
     if _, ok := m[n]; !ok {
       m[n] = Tree{}
     }
     m = m[n]
   }
-  n = Node{rune(word[i]), val}
+  n = Node(string(word[i]) + string(rune(val)))
 
   if _, ok := m[n]; !ok {
     m[n] = nil
@@ -70,20 +106,25 @@ func (t *Tree) Insert(word string, val int32) {
 }
 
 func (t *Tree) Print() {
-  t.PrintR("")
+  t.Walk(func(s string, i int) {
+    fmt.Printf("%v: %v\n", s, i)
+  })
 }
 
-func (t *Tree) PrintR(acc string) {
+func (t *Tree) Walk(callback func(string, int)) {
+  t.walkR(make([]rune, 0), callback)
+}
+
+func (t *Tree) walkR(acc []rune, callback func(string, int)) {
   for n, m := range *t {
-    // acc = acc + string(n[0])
-    // not -1 marks a valid word
-    if n[1] != -1 {
-      fmt.Printf("%v: %v\n",acc + string(n[0]),n[1])
+    chars := []rune(n)
+
+    if len(chars) == 2 {
+      callback(string(acc)+string(chars[0]), int(chars[1]))
     }
-    // 
+
     if m != nil {
-      m.PrintR(acc + string(n[0]))
+      m.walkR(append(acc, chars...), callback)
     }
   }
 }
-
