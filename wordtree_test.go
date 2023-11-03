@@ -14,12 +14,10 @@ func Test_WordTree_Insert_Lookup_Pack_Unpack(t *testing.T) {
     wt1.Insert(w, int32(i))
   }
   err = wt1.WriteTreeMsgpackGz("/tmp/en.tree.msgpack.gz")
-  // data, err := wt1.Pack()
   assetErrNil(t, err)
 
   wt2 := NewWordTree()
   err = wt2.ReadTreeMsgpackGz("/tmp/en.tree.msgpack.gz")
-  // err = wt2.Unpack(data)
   assetErrNil(t, err)
 
   for i, w := range top900words {
