@@ -35,6 +35,12 @@
 - [x] fix combonations. half harmonic isn't correct. the duke, is shown as more common than duke, cause the is high.
 - [x] do correct math.
 - [x] preserve order of query
+- [x] add wordtree code to repo
+- [x] Test to make sure wordtree encodes and decodes values correctly
+- [] convert files to wordtree format.
+- [] benchmark wordtree lookup
+- [] check if wordtree file is smaller than tsv
+- [] 
 
 ## indexes
 This is a very fun tangient but this is infact a tangent.
@@ -53,6 +59,7 @@ it is good enough for what it is. I should honestly use a database for fast look
     - jk we're noping this feature.
     - https://tufin.medium.com/printing-ascii-trees-in-golang-8ae6692fabe0
 - [] check if a tree lookup is smaller than a bin wordlist.
+- [] use wordtree code to files.
 
 ## other tasks
 - [] make an actuall readme with some explination

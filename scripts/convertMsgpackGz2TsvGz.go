@@ -1,21 +1,20 @@
-
 package main
 
 import (
-  "bytes"
-  "compress/gzip"
-  "io/ioutil"
-  "log"
-  "os"
-  "strings"
-  "fmt"
-  
-  "github.com/vmihailenco/msgpack/v5"
+	"bytes"
+	"compress/gzip"
+	"fmt"
+	"io"
+	"log"
+	"os"
+	"strings"
+
+	"github.com/vmihailenco/msgpack/v5"
 )
 
 func readFreqBinData(data_file string) ([][]string, error) {
   // Open the gzipped file
-  data, err := ioutil.ReadFile(data_file)
+  data, err := os.ReadFile(data_file)
   if err != nil {
     return nil, err
   }
@@ -28,7 +27,7 @@ func readFreqBinData(data_file string) ([][]string, error) {
   defer gr.Close()
 
   // Read the unzipped data
-  unzippedData, err := ioutil.ReadAll(gr)
+  unzippedData, err := io.ReadAll(gr)
   if err != nil {
     return nil, err
   }

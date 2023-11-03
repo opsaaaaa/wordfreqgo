@@ -49,6 +49,31 @@ func main() {
 
 }
 
+// store a word within the tree.
+func (t *Tree) Insert(word string, val int32) {
+  t.insert([]rune(word), val)
+}
+func (t *Tree) insert(word []rune, val int32) {
+  m := *t
+  var n Node
+  i := 0
+
+  for ; i < len(word) - 1;i++ {
+    n = Node(word[i])
+
+    if _, ok := m[n]; !ok {
+      m[n] = Tree{}
+    }
+    m = m[n]
+  }
+  n = Node(string(word[i]) + string(rune(val)))
+
+  if _, ok := m[n]; !ok {
+    m[n] = nil
+  }
+}
+
+
 // func node(letter rune, i int32) [2]rune {
 //   return [2]rune{letter, i}
 // }
@@ -74,35 +99,6 @@ func (t *Tree) lookup(word []rune) int32 {
   }
   // fmt.Println("bar yo")
   return -1
-}
-
-// storing words backwards might be more efficient
-// The lookup function 
-// func (t *Tree) LookupR(word string)  {
-// }
-
-func (t *Tree) Insert(word string, val int32) {
-  t.insert([]rune(word), val)
-}
-
-func (t *Tree) insert(word []rune, val int32) {
-  m := *t
-  var n Node
-  i := 0
-
-  for ; i < len(word) - 1;i++ {
-    n = Node(word[i])
-
-    if _, ok := m[n]; !ok {
-      m[n] = Tree{}
-    }
-    m = m[n]
-  }
-  n = Node(string(word[i]) + string(rune(val)))
-
-  if _, ok := m[n]; !ok {
-    m[n] = nil
-  }
 }
 
 func (t *Tree) Print() {
