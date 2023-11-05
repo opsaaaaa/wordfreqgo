@@ -37,7 +37,7 @@
 - [x] preserve order of query
 - [x] add wordtree code to repo
 - [x] Test to make sure wordtree encodes and decodes values correctly
-- [] write a script to convert files to wordtree format.
+- [x] write a script to convert files to wordtree format.
 - [] write wordquery with tree.
 - [] benchmark wordtree lookup
 - [] check if wordtree file is smaller than tsv
