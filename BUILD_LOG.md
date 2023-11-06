@@ -1,5 +1,38 @@
 
 
+# The current status.
+
+English and similar languages with white space word boundaries should function fine.
+The wordquery struct accepts a tokenize function.
+So other types of boundaries can be supported that way.
+
+I suspect Chinese and Japanese will need more work to function correctly.
+Other languages may also need some attention.
+I am making that a low priority as it is complex and not applicable to my use case.
+
+Numbers don't yet work correctly.
+Again low priority for me.
+
+I would like to have a function to easily export data.
+Specifically to write it to a database.
+I think I'll write that in the project I use that feature in.
+Then I'll decide if I am going to add that tooling here or not.
+
+The next things to be DONE.
+- write a more useful readme
+- consider how to publish the package. I'll do that when I need to use the package in another project.
+- make a command line utility. Perhaps a wrapper package called "wordfreqgo-cli" ?.
+
+
+# Removal of word tree code.
+
+I removed the word tree code and several experiments that aren't needed in the final product.
+That code is preserved in a branch called "2023-11-06".
+
+This code includes scripts to convert the source msgpack word data to the tsv format. (from the wordfreq py libary.)
+
+
+
 # Benchmark for tree lookup ends up being slower than linear lookup
 
 Using a tree based lookup ends up being slower.

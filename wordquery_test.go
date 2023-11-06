@@ -16,7 +16,8 @@ func Test_WordQuery_TopN(t *testing.T) {
 func Test_WordQuery_Lookup(t *testing.T) {
   wq := NewWordQuery("en")
   wq.unitConversion = CbToCb
-  results, err := wq.Lookup("the")
+  results, err := wq.Lookup("the", "isn't", "is not", "is", "not")
+  
   assetErrNil(t, err)
   asertSame(t, results[0].word, "the")
   asertSame(t, results[0].val, 127.0)

@@ -1,7 +1,6 @@
 package main
 
 import (
-	// "math"
 	"testing"
 )
 
@@ -15,6 +14,25 @@ func assetErrNil(t *testing.T, err error) {
   if err != nil {
     t.Errorf("Expected error to be nil.\n%v", err)
   }
+}
+// asset assert asert
+func assertStringSliceSame(t *testing.T, a, b []string) {
+  if len(a) != len(b) {
+    t.Errorf("Expected %v, but got %v", a, b)
+    return
+  }
+  for i := range a {
+    if a[i] != b[i] {
+      t.Errorf("Expected %v, but got %v", a, b)
+      return
+    }
+  }
+}
+
+func Test_Uniq(t *testing.T) {
+  expected := []string{"one", "two", "three"}
+  actuall := UniqStr([]string{"one","one","two","one","three","two"})
+  assertStringSliceSame(t, expected, actuall)
 }
 
 // func Test_SomeMath(t *testing.T) {

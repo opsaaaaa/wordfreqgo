@@ -15,6 +15,18 @@ func CbAndProbabilities(args ...int) float64 {
   return FqToCb(sum)
 }
 
+func UniqStr(arr []string) []string {
+  visited := make(map[string]bool)
+  result := make([]string,0)
+  for _, e := range arr {
+    if _, ok := visited[e]; !ok {
+      result = append(result, e)
+      visited[e] = true
+    }
+  }
+  return result
+}
+
 // func getValNestedMap(m map[string]interface{}) interface{} {
 //     for i := range m {
 //         nestedMap, ok := m[i].(map[string]interface{})

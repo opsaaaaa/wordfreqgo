@@ -77,6 +77,7 @@ func (w *WordQuery) Lookup(queries ...string) ([]WordValFloat, error) {
   for _,query := range queries {
     words = append(words, w.tokenize(query)...)
   }
+  words = UniqStr(words)
 
   results, err := SearchTsvGzRows(w.filenameTsvGz(), words)
   if err != nil { return nil, err }
