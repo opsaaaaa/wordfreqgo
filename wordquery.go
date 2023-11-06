@@ -65,7 +65,6 @@ func NewWordQuery(lang string) *WordQuery {
 //   return w.calcQueryValue(minfq, fqs...), err
 // }
 
-// TODO: add a thing for unit maybe
 type WordValFloat struct {
   word string
   val float64

@@ -29,10 +29,8 @@ Convert from one frequency unit to another.
 - [] default to cb.
 - [] make count package
 - [] fix spelling error for assertSame and assertErrNil
-- [] make an actual readme with some explanation
 - [] write some example usage
 - [] explain unit conversion.
-- [] explain frequency estimation, bias
 
 
 ## other tasks
@@ -45,25 +43,26 @@ Convert from one frequency unit to another.
     - inject a filter function.
     - only needed on word list queries.
 - [] write a baller test for unit conversions.
-- [] extract tsv files function.
-- [] extract tsv word list function.
-- [] extract work list with frequency ranges.
+- [] extract word list with frequency ranges.
     - just use line numbers to get the right bits, if from zipf, round min and max with celi and floor.
 
 ## consider decisions
 - [] consider filtering with spell checker. (maybe another project)
-- [x] consider server operations with a database. and how that should work.
-    - it should use a database.
 - [] investigate pulishing options.
-- [] consider spliting the large/small files. it tries the small file first, and does the other half if it doesnt find the word.
-    - that optimization currenlt doesnt matter tho.
 - [] calculate frequency for a given input text and tokenizer
-
 
 
 # Archive
 
 ## Tasks
+- [x] consider spliting the large/small files. it tries the small file first, and does the other half if it doesnt find the word.
+    - that optimization currenlt doesnt matter tho.
+    - It would save on storage space with a likely cost to lookup times for queries using the large dataset.
+    - It wouldn't likely reduce user complexity.
+- [x] explain frequency estimation, bias
+- [x] consider server operations with a database. and how that should work.
+    - it should use a database.
+- [x] make an actual readme with some explanation
 - [x] convert all the msgpack.gz files into tsv.gz files.
 - [x] walk tsv file
 - [x] write find the word functions.
