@@ -38,11 +38,13 @@
 - [x] add wordtree code to repo
 - [x] Test to make sure wordtree encodes and decodes values correctly
 - [x] write a script to convert files to wordtree format.
-- [] write wordquery with tree.
-- [] benchmark wordtree lookup
-- [] check if wordtree file is smaller than tsv
-- [] Remove "small" "large" distinction because opening files ins't a bottle neck
+- [x] write wordquery with tree.
+- [x] benchmark wordtree lookup
+    - WAY SLOWER, BECAUSE OF WRITTING TREE TO MEMORY FOR LOOKUP.
+- [x] check if wordtree file is smaller than tsv
+    - hardly smaller, not meaningful
 - [] fix spelling error for assertSame and assertErrNil
+- [] remove wordtree code, as it is slower.
 
 ## indexes
 This is a very fun tangient but this is infact a tangent.
@@ -53,15 +55,17 @@ it is good enough for what it is. I should honestly use a database for fast look
     - https://pkg.go.dev/encoding/gob
 - [x] thinker with msgpack
     - to see if it will work for saving indexes.
-- [] make it faster with indexes. use a tree index for compactness
+- [x] make it faster with indexes. use a tree index for compactness
     - map[rune]map[rune]...int
     - https://stackoverflow.com/questions/44971026/get-value-form-nested-map-type-mapstringinterface
     - key, value
     - [[rune, val]]
     - jk we're noping this feature.
     - https://tufin.medium.com/printing-ascii-trees-in-golang-8ae6692fabe0
-- [] check if a tree lookup is smaller than a bin wordlist.
-- [] use wordtree code to files.
+- [x] check if a tree lookup is smaller than a bin wordlist.
+    - just bearly smaller.
+- [x] use wordtree code to files.
+- [] benchmark tree lookup
 
 ## other tasks
 - [] make an actuall readme with some explination
@@ -88,6 +92,19 @@ it is good enough for what it is. I should honestly use a database for fast look
     - that optimization currenlt doesnt matter tho.
 - [] calculate frequency for a given input text and tokenizer
 
+# Benchmark for tree lookup end up being slower than linear lookup
+
+Using a tree based lookup ends up being slower.
+I assume it is becuase of encoding and decoding msgpack data into maps.
+Marshal/Unmarshal.
+At some point that has to write every value into the tree.
+Where as the tsv linear lookup doens't have to write the whole thing into memory.
+Hu, thats very education.
+
+So the trouble with a tree structure, is storing it as a plain file and reading it.
+This is where database would win out with lookup speed.
+So if lots of queries are needed, then a db sould be the faster choice.
+Thats kinda ovbous.
 
 # Thinking About Tree lookup speed.
 

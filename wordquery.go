@@ -7,6 +7,7 @@ import (
 
 // data/small_en.tsv.gz
 const DATA_FILE_TSV_GZ = "data/%s_%s.tsv.gz"
+const DATA_FILE_TREE_MSG_GZ = "data/%s.tree.msgpack.gz"
 
 
 type WordQuery struct {
@@ -71,6 +72,40 @@ type WordValFloat struct {
   val float64
 }
 
+// func (w *WordQuery) Lookup(queries ...string) ([]WordValFloat, error) {
+//   // for _,query := range queries {
+//   //   words = append(words, w.tokenize(query)...)
+//   // }
+
+//   wt := NewWordTree()
+//   err := wt.ReadTreeMsgpackGz(w.filenameTreeMsgGz())
+//   if err != nil { return nil, err }
+
+//   resutls := make([]WordValFloat, len(queries))
+
+//   var fqs []int
+//   var words []string
+//   minfq := 0
+
+//   for i, query := range queries {
+
+//     words = w.tokenize(strings.ToLower(query))
+//     fqs = make([]int, len(words))
+
+//     for j, word := range words {
+//       fqs[j] = int(wt.Lookup(word))
+//       if fqs[j] > minfq { minfq = fqs[j] }
+//       // fqs = append(fqs, int(wt.Lookup(word)))
+//     }
+
+//     resutls[i].word = query
+//     resutls[i].val = w.calcQueryValue(minfq, fqs...)
+//   }
+
+//   return resutls, nil
+
+// }
+
 func (w *WordQuery) Lookup(queries ...string) ([]WordValFloat, error) {
 
   words := make([]string, 0)
@@ -102,6 +137,10 @@ func (w *WordQuery) Lookup(queries ...string) ([]WordValFloat, error) {
   }
 
   return output, nil
+}
+
+func (w *WordQuery) filenameTreeMsgGz() string {
+  return fmt.Sprintf(DATA_FILE_TREE_MSG_GZ, w.lang)
 }
 
 func (w *WordQuery) filenameTsvGz() string {
